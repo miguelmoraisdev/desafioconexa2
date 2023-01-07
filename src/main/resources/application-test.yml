@@ -14,3 +14,6 @@ spring:
     generate-ddl: true
     show-sql: true
     defer-datasource-initialization: true
+spring-doc:
+  swagger-ui:
+    enabled: true
