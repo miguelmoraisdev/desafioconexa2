@@ -13,7 +13,7 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI api() {
         return new OpenAPI()
-                .addServersItem(new Server().url("/"))
+                .addServersItem(new Server().url("http:localhost:8080"))
                 .info(this.metaData());
     }
 
