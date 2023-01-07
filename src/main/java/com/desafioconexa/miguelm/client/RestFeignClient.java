@@ -5,7 +5,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@FeignClient(name = "apidesafio", url = "http://localhost:8081/")
+@FeignClient(name = "${feign.name.site}", url = "${feign.url.site}")
 public interface RestFeignClient {
 
     @GetMapping(value = "film/lukeskywalker", consumes="application/json")

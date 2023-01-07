@@ -17,3 +17,12 @@ spring:
 spring-doc:
   swagger-ui:
     enabled: true
+feign:
+  client:
+    config:
+      default:
+        loggerLevel: full
+  name:
+    site: apidesafio
+  url:
+    site: http://localhost:8081/
