@@ -2,7 +2,6 @@ package com.desafioconexa.miguelm.controller;
 
 import com.desafioconexa.miguelm.dto.FilmRequest;
 import com.desafioconexa.miguelm.service.FilmService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

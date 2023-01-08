@@ -16,9 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -43,8 +41,10 @@ public class FilmServiceTest {
     private Film film1;
     private Film film2;
     private Film filmSaved;
+    private Set<FilmRequest> clientList = new HashSet<>();
     private List<Film> savedFilms = new ArrayList<>();
     private List<Film> emptyList = new ArrayList<>();
+    private Set<Film> setSavedFilms = new HashSet<>();
     private List<FilmRequest> listClient = new ArrayList<>();
     private Page<FilmRequest> page;
 
@@ -58,17 +58,22 @@ public class FilmServiceTest {
         listClient.add(filmRequest1);
         listClient.add(filmRequest2);
         listClient.add(filmRequest3);
+        clientList.add(filmRequest2);
+        clientList.add(filmRequest3);
         savedFilms.add(film1);
         savedFilms.add(film2);
+        setSavedFilms.add(film1);
+        setSavedFilms.add(film2);
         filmToSave = new FilmRequest("Star Wars 4", "4", "George Lucas", new Date());
         filmSaved = new Film("Star Wars 4", "4", "George Lucas", new Date());
         page = new PageImpl<>(listClient);
         when(restFeignClient.getFilmsList()).thenReturn(page);
+        when(filmRepository.findAll()).thenReturn(savedFilms);
+        when(filmRepository.save(any())).thenReturn(filmSaved);
     }
 
     @Test
     void testGetListOfLukeFilms() {
-        when(filmRepository.findAll()).thenReturn(savedFilms);
         Assertions.assertDoesNotThrow(() -> {
             filmService.getListOfLukeFilms(filmToSave);
         });
@@ -77,36 +82,29 @@ public class FilmServiceTest {
         Assertions.assertDoesNotThrow(() -> {
             filmService.getListOfLukeFilms(filmToSave);
         });
-
     }
 
     @Test
-    void testGetFilmsFromPage() {
-        //No Exception case
-        List<FilmRequest> listResult = filmService.getFilmsFromPage();
+    void testGetFilmsFromListClient() {
+        Assertions.assertEquals(2, filmService.getFilmsFromListClient(clientList).size());
+    }
 
-        assertNotNull(listResult);
-        assertEquals(3, listResult.size());
-
-        //Exception case
-        when(restFeignClient.getFilmsList()).thenThrow(FeignClientException.class);
-        Assertions.assertThrows(FeignClientException.class, () -> {
-            filmService.getFilmsFromPage();
-        } );
-
+    @Test
+    void testGetSetFromList() {
+        Assertions.assertEquals(2, filmService.getSetFromList(savedFilms).size());
     }
 
     @Test
     void testCompareFilmRequestWithFeignClient() {
         //No Exception case
         Assertions.assertDoesNotThrow(() -> {
-            filmService.compareFilmRequestWithFeignClient(listClient, filmToSave);
+            filmService.compareFilmRequestWithFeignClient(clientList, filmToSave);
         });
 
         //Exception case
-        filmToSave.setEpisodeId("1");
+        filmToSave.setEpisodeId("2");
         Assertions.assertThrows(FilmAlreadyExistsInDatabase.class, () -> {
-            filmService.compareFilmRequestWithFeignClient(listClient, filmToSave);
+            filmService.compareFilmRequestWithFeignClient(clientList, filmToSave);
         } );
     }
 
@@ -124,23 +122,28 @@ public class FilmServiceTest {
         } );
 
     }
+
     @Test
-    void testCheckIfAnyMatch() {
-        List<Film> listResult = filmService.checkIfAnyMatch(savedFilms, listClient, filmToSave);
+    void testGetFilmsFromPage() {
+        //No Exception case
+        Set<FilmRequest> listResult = filmService.getFilmsFromPage();
 
         assertNotNull(listResult);
-        assertEquals(2, listResult.size());
+        assertEquals(3, listResult.size());
+
+        //Exception case
+        when(restFeignClient.getFilmsList()).thenThrow(FeignClientException.class);
+        Assertions.assertThrows(FeignClientException.class, () -> {
+            filmService.getFilmsFromPage();
+        } );
     }
 
     @Test
     void testSavedFilmsIsEmpty() {
-        when(filmRepository.save(any())).thenReturn(filmSaved);
-        List<Film> listResult = filmService.savedFilmsIsEmpty(listClient, filmToSave);
+        Set<Film> listResult = filmService.savedFilmsIsEmpty(clientList, filmToSave);
 
         assertNotNull(listResult);
-        assertEquals(4, listResult.size());
-
+        assertEquals(3, listResult.size());
 
     }
-
 }
