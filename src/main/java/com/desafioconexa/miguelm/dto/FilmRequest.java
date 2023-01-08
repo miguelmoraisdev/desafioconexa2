@@ -17,14 +17,17 @@ import java.util.Date;
 @Schema(name = "FilmRequest", description = "Schema of a FilmRequest object")
 public class FilmRequest {
 
+    @NotNull(message = "Required field")
     @NotBlank(message = "Required field")
     @JsonProperty(value = "title")
     private String title;
 
+    @NotNull(message = "Required field")
     @NotBlank(message = "Required field")
     @JsonProperty(value = "episode_id")
     private String episodeId;
 
+    @NotNull(message = "Required field")
     @NotBlank(message = "Required field")
     @JsonProperty(value = "director")
     private String director;
