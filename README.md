@@ -6,7 +6,7 @@ O Conexa Desafio 2 é uma API-REST que usa FeignClient para buscar na [DesafioCo
 
 A aplicação não permite que um filme já existente no banco seja adicionado novamente. O mesmo serve para os filmes que são obitidos a partir da API ConexaDesafio1. Se eles já foram adicionados ao banco, a aplicação manda uma exception explicando que o filme já foi adicionado.
 
-Quando a apilcação [DesafioConexa1](https://github.com/miguelmoraisdev/desafioconexa1) não está respondendo a aplição lança uma exception ao front com a mensagem "Time out for the client".
+Quando a apilcação [DesafioConexa1](https://github.com/miguelmoraisdev/desafioconexa1) não está respondendo a aplicação lança uma exception ao front com a mensagem "Time out for the client".
 
 Após adicionar os filmes no banco, a lista de filmes é impressa no console da aplicação.
 
